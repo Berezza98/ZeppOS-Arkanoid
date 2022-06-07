@@ -1,4 +1,5 @@
 const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = hmSetting.getDeviceInfo();
+const logger = DeviceRuntimeCore.HmLogger.getLogger('Star Wars');
 
 export function getRandom(min, max) {
   min = Math.ceil(min);
@@ -19,4 +20,8 @@ export function getMinMax(origMin, origMax, min, max, value) {
   const origStep = (origMax - origMin) / stepsCount;
 
   return origStep * value;
+}
+
+export function log(...args) {
+  logger.debug(...args);
 }

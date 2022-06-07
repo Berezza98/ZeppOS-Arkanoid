@@ -1,15 +1,17 @@
 import Vector from "../utils/Vector";
+import Image from "./Image";
 
 const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = hmSetting.getDeviceInfo();
 const SCREEN_CENTER = new Vector(DEVICE_WIDTH / 2, DEVICE_HEIGHT / 2);
 
 export default class Platform {
   constructor() {
+    this.widget = null;
     this.width = 100;
     this.height = 20;
     this.angle = 0;
     this.image = 'image/platform.png';
-    this.position = Vector.fromAngle(this.angle).mult(DEVICE_WIDTH / 2 - 40);
+    this.position = Vector.fromAngle(this.angle).mult(DEVICE_WIDTH / 2).add(SCREEN_CENTER);
 
     this.addListeners();
   }
@@ -22,13 +24,11 @@ export default class Platform {
 
   update() {
     if (this.widget) {
-      this.position = Vector.fromAngle(this.angle).mult(DEVICE_WIDTH / 2 - 40);
-
-      const finalPosition = SCREEN_CENTER.add(this.position).sub(new Vector(this.width / 2, this.height / 2));
+      this.position = Vector.fromAngle(this.angle).mult(DEVICE_WIDTH / 2).add(SCREEN_CENTER);
 
       this.widget.setProperty(hmUI.prop.MORE, {
-        x: finalPosition.x,
-        y: finalPosition.y,
+        x: this.position.x,
+        y: this.position.y,
         angle: this.angle / (Math.PI / 180)
       });
       return;
@@ -38,17 +38,14 @@ export default class Platform {
   }
 
   draw() {
-    const finalPosition = SCREEN_CENTER.add(this.position).sub(new Vector(this.width / 2, this.height / 2));
-
-    this.widget = hmUI.createWidget(hmUI.widget.IMG, {
-      x: finalPosition.x,
-      y: finalPosition.y,
+    this.widget = new Image({
+      x: this.position.x,
+      y: this.position.y,
       w: this.width,
       h: this.height,
-      center_x: this.width / 2,
-      center_y: this.height / 2,
       src: this.image,
-      angle: this.angle
+      angle: this.angle,
+      mode: 'center'
     });
   }
 }

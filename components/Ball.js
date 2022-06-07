@@ -1,4 +1,7 @@
 import Vector from "../utils/Vector";
+import Image from "./Image";
+
+const logger = DeviceRuntimeCore.HmLogger.getLogger('helloworld');
 
 export default class Ball {
   constructor() {
@@ -12,7 +15,7 @@ export default class Ball {
 
     this.acceleration = new Vector(0, 0);
     this.velocity = new Vector(0, 0);
-    this.position = new Vector((width / 2) - (this.width / 2), (height / 2) - (this.height / 2));
+    this.position = new Vector(width / 2, height / 2);
 
     this.addListeners();
   }
@@ -31,6 +34,7 @@ export default class Ball {
     hmApp.registerGestureEvent((event) => {
       switch (event) {
         case hmApp.gesture.UP:
+          logger.debug('LOGS: ', Object.keys(hmUI));
           this.acceleration = new Vector(0, -10);
           break
         case hmApp.gesture.DOWN:
@@ -58,11 +62,10 @@ export default class Ball {
     const { width, height } = hmSetting.getDeviceInfo();
 
     const screenCenter = new Vector(width / 2, height / 2);
-    const playerCenter = new Vector(this.position.x + this.width / 2, this.position.y + this.height / 2);
 
-    if (playerCenter.sub(screenCenter).mag() > width / 2 - this.width / 2) {
-      const currentVector = playerCenter.sub(screenCenter).setMag(width / 2 - this.width / 2);
-      this.position = screenCenter.add(currentVector).sub(new Vector(this.width / 2, this.height / 2));
+    if (this.position.sub(screenCenter).mag() > width / 2 - this.width / 2) {
+      const currentVector = this.position.sub(screenCenter).setMag(width / 2 - this.width / 2);
+      this.position = screenCenter.add(currentVector);
     }
   }
 
@@ -81,7 +84,7 @@ export default class Ball {
         y: this.position.y,
         angle: this.angle
       });
-      // this.widget.setProperty(hmUI.prop.y, this.position.y);
+
       // hmUI.deleteWidget(this.widget);
       return;
     }
@@ -90,28 +93,14 @@ export default class Ball {
   }
 
   draw() {
-    this.widget = hmUI.createWidget(hmUI.widget.IMG, {
+    this.widget = new Image({
       x: this.position.x,
       y: this.position.y,
       w: this.width,
       h: this.height,
-      pos_x: 0,
-      pos_y: 0,
-      center_x: this.width / 2,
-      center_y: this.height / 2,
       src: this.image,
-      angle: this.angle
+      angle: this.angle,
+      mode: 'center'
     });
-
-    // this.widget = hmUI.createWidget(hmUI.widget.FILL_RECT, {
-    //   x: this.position.x,
-    //   y: this.position.y,
-    //   w: this.width,
-    //   h: this.height,
-    //   center_x: this.width / 2,
-    //   center_y: this.height / 2,
-    //   angle: this.angle,
-    //   color: 0x0000FF
-    // });
   }
 }
