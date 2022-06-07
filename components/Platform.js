@@ -11,7 +11,6 @@ export default class Platform {
     this.height = 20;
     this.angle = 0;
     this.image = 'image/platform.png';
-    this.position = Vector.fromAngle(this.angle).mult(DEVICE_WIDTH / 2).add(SCREEN_CENTER);
 
     this.addListeners();
   }
@@ -20,16 +19,20 @@ export default class Platform {
     return this.angle / (Math.PI / 180) + 90;
   }
 
+  get position() {
+    return Vector.fromAngle(this.angle).mult(DEVICE_WIDTH / 2 - this.height).add(SCREEN_CENTER);
+  }
+
   addListeners() {
     hmApp.registerSpinEvent((key, degree) => {
       this.angle += Math.PI / 180 * degree;
+
+      return true;
     });
   }
 
   update() {
     if (this.widget) {
-      this.position = Vector.fromAngle(this.angle).mult(DEVICE_WIDTH / 2).add(SCREEN_CENTER);
-
       this.widget.setProperty(hmUI.prop.MORE, {
         x: this.position.x,
         y: this.position.y,
