@@ -11,12 +11,11 @@ export default class Game {
   }
 
   addGameObjects() {
-    // new Background();
-    new Platform();
+    new Background();
 
     this.gameObjects = [
       new Ball(),
-      // new Platform(),
+      new Platform(),
     ];
   }
 
