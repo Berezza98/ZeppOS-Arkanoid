@@ -5,9 +5,10 @@ const SCREEN_CENTER = new Vector(DEVICE_WIDTH / 2, DEVICE_HEIGHT / 2);
 
 export default class Platform {
   constructor() {
-    this.width = 40;
-    this.height = 10;
+    this.width = 100;
+    this.height = 20;
     this.angle = 0;
+    this.image = 'image/platform.png';
     this.position = Vector.fromAngle(this.angle).mult(DEVICE_WIDTH / 2 - 40);
 
     this.addListeners();
@@ -39,15 +40,15 @@ export default class Platform {
   draw() {
     const finalPosition = SCREEN_CENTER.add(this.position).sub(new Vector(this.width / 2, this.height / 2));
 
-    this.widget = hmUI.createWidget(hmUI.widget.FILL_RECT, {
+    this.widget = hmUI.createWidget(hmUI.widget.IMG, {
       x: finalPosition.x,
       y: finalPosition.y,
       w: this.width,
       h: this.height,
       center_x: this.width / 2,
       center_y: this.height / 2,
-      angle: this.angle,
-      color: 0x0000FF
+      src: this.image,
+      angle: this.angle
     });
   }
 }
