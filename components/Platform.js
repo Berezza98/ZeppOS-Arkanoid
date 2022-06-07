@@ -16,6 +16,10 @@ export default class Platform {
     this.addListeners();
   }
 
+  get visibleAngle() {
+    return this.angle / (Math.PI / 180) + 90;
+  }
+
   addListeners() {
     hmApp.registerSpinEvent((key, degree) => {
       this.angle += Math.PI / 180 * degree;
@@ -29,7 +33,7 @@ export default class Platform {
       this.widget.setProperty(hmUI.prop.MORE, {
         x: this.position.x,
         y: this.position.y,
-        angle: this.angle / (Math.PI / 180)
+        angle: this.visibleAngle
       });
       return;
     }
@@ -44,7 +48,7 @@ export default class Platform {
       w: this.width,
       h: this.height,
       src: this.image,
-      angle: this.angle,
+      angle: this.visibleAngle,
       mode: 'center'
     });
   }
