@@ -1,6 +1,7 @@
 import Vector from "../utils/Vector";
 import Image from "./Image";
 import { SCREEN_CENTER, DEVICE_WIDTH } from "../consts";
+import { log, rectCircleColliding } from "../helpers";
 
 export default class Ball {
   constructor(game) {
@@ -10,12 +11,17 @@ export default class Ball {
     this.image = 'image/game-ball.png';
     this.width = 32;
     this.height = 32;
+    this.maxSpeed = 4;
 
     this.acceleration = new Vector(0, 0);
     this.velocity = new Vector(0, 0);
-    this.position = this.game.platform.position.add(SCREEN_CENTER.sub(this.game.platform.position).setMag(this.game.platform.height / 2 + this.height / 2));
+    this.position = this.positionOnThePlatform;
 
     this.addListeners();
+  }
+
+  get positionOnThePlatform() {
+    return this.game.platform.position.add(SCREEN_CENTER.sub(this.game.platform.position).setMag(this.game.platform.height / 2 + this.height / 2));
   }
 
   addListeners() {
@@ -41,32 +47,40 @@ export default class Ball {
     });
   }
 
-  addFrictionForce() {
-    this.velocity = this.velocity.mult(0.95);
-  }
-
-  checkBorders() {
+  checkDeviceBorders() {
     const { width, height } = hmSetting.getDeviceInfo();
 
-    const screenCenter = new Vector(width / 2, height / 2);
-
-    if (this.position.sub(screenCenter).mag() > width / 2 - this.width / 2) {
-      const currentVector = this.position.sub(screenCenter).setMag(width / 2 - this.width / 2);
-      this.position = screenCenter.add(currentVector);
+    if (this.position.sub(SCREEN_CENTER).mag() > width / 2 + this.width / 2) {
+      this.isFlying = false;
+      this.velocity.set(0, 0);
+      this.position = this.positionOnThePlatform;
     }
+  }
+
+  checkPlatformCollision() {
+    if (!rectCircleColliding(this.game.platform.widget, this.widget)) return;
+    
+    log('COLLISION');
+  }
+
+  start() {
+    if (this.isFlying) return;
+
+    this.isFlying = true;
+    this.acceleration = SCREEN_CENTER.sub(this.position).setMag(this.maxSpeed);
   }
 
   update() {
     if (this.isFlying) {
       this.velocity = this.velocity.add(this.acceleration);
       this.position = this.position.add(this.velocity);
-  
-      // this.addFrictionForce();
-      // this.checkBorders();
+
+      this.checkDeviceBorders();
+      this.checkPlatformCollision();
   
       this.acceleration.set(0, 0);
     } else {
-      this.position = this.game.platform.position.add(SCREEN_CENTER.sub(this.game.platform.position).setMag(this.game.platform.height / 2 + this.height / 2));
+      this.position = this.positionOnThePlatform;
     }
 
     if (this.widget) {

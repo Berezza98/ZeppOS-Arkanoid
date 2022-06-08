@@ -15,15 +15,24 @@ export default class Image {
     this.widget = null;
     this.options = Object.assign({}, defaultConfig, config);
     this.widgetSize = Math.max(this.options.w, this.options.h);
-    this.realPosition = this.options.mode.toLowerCase() === 'center'
+    this.realPosition = this.isCenterMode
       ? new Vector(this.options.x - (this.widgetSize / 2), this.options.y - (this.widgetSize / 2))
       : new Vector(this.options.x - ((this.widgetSize - this.options.w) / 2), this.options.y - ((this.widgetSize - this.options.h) / 2));
   
     this.draw();
   }
 
+  get isCenterMode() {
+    return this.options.mode.toLowerCase() === 'center';
+  }
+
   setProperty(propName, value) {
-    const updates = this.options.mode.toLowerCase() === 'center' ? this.transformCenter(value) : value;
+    const updates = this.isCenterMode ? this.transformCenter(value) : value;
+
+    this.options = {
+      ...this.options,
+      ...updates
+    };
 
     this.widget.setProperty(propName, updates);
   }

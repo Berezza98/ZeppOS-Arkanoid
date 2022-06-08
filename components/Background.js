@@ -1,8 +1,16 @@
 export default class Background {
-  constructor() {
+  constructor(game) {
+    this.game = game;
     this.image = 'image/new-space.png';
 
     this.draw();
+    this.addListeners();
+  }
+
+  addListeners() {
+    this.widget.addEventListener(hmUI.event.CLICK_UP, (info) => {
+      this.game.ball.start();
+    });    
   }
 
   draw() {
