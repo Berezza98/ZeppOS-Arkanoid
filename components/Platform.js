@@ -1,8 +1,6 @@
 import Vector from "../utils/Vector";
 import Image from "./Image";
-
-const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = hmSetting.getDeviceInfo();
-const SCREEN_CENTER = new Vector(DEVICE_WIDTH / 2, DEVICE_HEIGHT / 2);
+import { SCREEN_CENTER, DEVICE_WIDTH } from "../consts";
 
 export default class Platform {
   constructor() {

@@ -6,6 +6,8 @@ export default class Game {
   constructor() {
     this.fps = 30;
     this.timer = null;
+    this.platform = new Platform(this);
+    this.ball = new Ball(this);
 
     this.addGameObjects();
   }
@@ -14,8 +16,8 @@ export default class Game {
     new Background();
 
     this.gameObjects = [
-      new Ball(),
-      new Platform(),
+      this.ball,
+      this.platform
     ];
   }
 

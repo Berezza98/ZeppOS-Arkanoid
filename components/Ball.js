@@ -1,40 +1,27 @@
 import Vector from "../utils/Vector";
 import Image from "./Image";
-
-const logger = DeviceRuntimeCore.HmLogger.getLogger('helloworld');
+import { SCREEN_CENTER, DEVICE_WIDTH } from "../consts";
 
 export default class Ball {
-  constructor() {
-    const { width, height } = hmSetting.getDeviceInfo();
-
+  constructor(game) {
+    this.game = game;
+    this.isFlying = false;
     this.widget = null;
-    this.angle = 0;
-    this.image = 'image/circle.png';
-    this.width = 64;
-    this.height = 64;
+    this.image = 'image/game-ball.png';
+    this.width = 32;
+    this.height = 32;
 
     this.acceleration = new Vector(0, 0);
     this.velocity = new Vector(0, 0);
-    this.position = new Vector(width / 2, height / 2);
+    this.position = this.game.platform.position.add(SCREEN_CENTER.sub(this.game.platform.position).setMag(this.game.platform.height / 2 + this.height / 2));
 
     this.addListeners();
   }
 
   addListeners() {
-    // hmApp.registerSpinEvent((key, degree) => {
-    //   this.angle += degree;
-    // });
-
-    hmApp.registerKeyEvent((key, action) => {
-      if (action === hmApp.action.DOUBLE_CLICK) {
-        this.acceleration = this.acceleration.add(new Vector(0, 1));
-      }
-    });
-
     hmApp.registerGestureEvent((event) => {
       switch (event) {
         case hmApp.gesture.UP:
-          logger.debug('LOGS: ', Object.keys(hmUI));
           this.acceleration = new Vector(0, -10);
           break
         case hmApp.gesture.DOWN:
@@ -70,22 +57,24 @@ export default class Ball {
   }
 
   update() {
-    this.velocity = this.velocity.add(this.acceleration);
-    this.position = this.position.add(this.velocity);
-
-    this.addFrictionForce();
-    this.checkBorders();
-
-    this.acceleration.set(0, 0);
+    if (this.isFlying) {
+      this.velocity = this.velocity.add(this.acceleration);
+      this.position = this.position.add(this.velocity);
+  
+      // this.addFrictionForce();
+      // this.checkBorders();
+  
+      this.acceleration.set(0, 0);
+    } else {
+      this.position = this.game.platform.position.add(SCREEN_CENTER.sub(this.game.platform.position).setMag(this.game.platform.height / 2 + this.height / 2));
+    }
 
     if (this.widget) {
       this.widget.setProperty(hmUI.prop.MORE, {
         x: this.position.x,
         y: this.position.y,
-        angle: this.angle
       });
 
-      // hmUI.deleteWidget(this.widget);
       return;
     }
 
@@ -99,7 +88,6 @@ export default class Ball {
       w: this.width,
       h: this.height,
       src: this.image,
-      angle: this.angle,
       mode: 'center'
     });
   }
