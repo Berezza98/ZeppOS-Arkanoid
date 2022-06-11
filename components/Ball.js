@@ -1,7 +1,7 @@
 import Vector from "../utils/Vector";
 import Image from "./Image";
 import { SCREEN_CENTER, DEVICE_WIDTH } from "../consts";
-import { log, rectCircleColliding } from "../helpers";
+import { log } from "../helpers";
 
 export default class Ball {
   constructor(game) {
@@ -48,7 +48,7 @@ export default class Ball {
   }
 
   checkDeviceBorders() {
-    const { width, height } = hmSetting.getDeviceInfo();
+    const { width } = hmSetting.getDeviceInfo();
 
     if (this.position.sub(SCREEN_CENTER).mag() > width / 2 + this.width / 2) {
       this.isFlying = false;
@@ -57,10 +57,45 @@ export default class Ball {
     }
   }
 
-  checkPlatformCollision() {
-    if (!rectCircleColliding(this.game.platform.widget, this.widget)) return;
+  getClosestPointToThePlatform() {
+    const platformCoordinates = this.game.platform.coorditates;
+
+    const startPlatformToEndPlatformVector = platformCoordinates.end.sub(platformCoordinates.start);
+    const centerBallToStartPlatformVector = platformCoordinates.start.sub(this.position);
+    const centerBallToEndPlatformVector = platformCoordinates.end.sub(this.position);
+
+    // CHECK IF CLOSEST POINT IS START POINT OF PLATFORM
+    if (Vector.dot(startPlatformToEndPlatformVector, centerBallToStartPlatformVector.normalize()) > 0) {
+      return platformCoordinates.start;
+    }
+
+    // CHECK IF CLOSEST POINT IS END POINT OF PLATFORM
+    if (Vector.dot(startPlatformToEndPlatformVector, centerBallToEndPlatformVector.normalize()) < 0) {
+      return platformCoordinates.end;
+    }
+
+    const startPlatformToCenterBallVector = this.position.sub(platformCoordinates.start);
+
+    const projectionLength = Vector.dot(startPlatformToEndPlatformVector.normalize(), startPlatformToCenterBallVector);
+    const projectionPoint = platformCoordinates.start.add(startPlatformToEndPlatformVector.setMag(projectionLength));
     
-    log('COLLISION');
+    return projectionPoint;
+  }
+
+  checkPlatformCollision() {
+    if (!this.isFlying) return;
+
+    const closestPointToThePlatform = this.getClosestPointToThePlatform();
+
+    this.point.setProperty(hmUI.prop.MORE, {
+      x: closestPointToThePlatform.x,
+      y: closestPointToThePlatform.y,
+    });
+
+    if (closestPointToThePlatform.sub(this.position).mag() <= this.width / 2) {
+      log('COLLISION');
+      this.velocity = this.velocity.mult(-1);
+    }
   }
 
   start() {
@@ -89,6 +124,11 @@ export default class Ball {
         y: this.position.y,
       });
 
+      this.point2.setProperty(hmUI.prop.MORE, {
+        x: this.position.x,
+        y: this.position.y,
+      });
+
       return;
     }
 
@@ -103,6 +143,22 @@ export default class Ball {
       h: this.height,
       src: this.image,
       mode: 'center'
+    });
+
+    this.point = hmUI.createWidget(hmUI.widget.FILL_RECT, {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 3,
+      color: 0xFF0000
+    });
+
+    this.point2 = hmUI.createWidget(hmUI.widget.FILL_RECT, {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 3,
+      color: 0x00FF00
     });
   }
 }

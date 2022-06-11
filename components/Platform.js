@@ -1,6 +1,7 @@
 import Vector from "../utils/Vector";
 import Image from "./Image";
 import { SCREEN_CENTER, DEVICE_WIDTH } from "../consts";
+import { getCoorditatesAfterRotation } from "../helpers";
 
 export default class Platform {
   constructor() {
@@ -19,6 +20,36 @@ export default class Platform {
 
   get position() {
     return Vector.fromAngle(this.angle).mult(DEVICE_WIDTH / 2 - this.height).add(SCREEN_CENTER);
+  }
+
+  get coorditates() {
+    const originalTopLeft = new Vector(this.position.x - this.width / 2, this.position.y - this.height / 2);
+    const originalTopRight = new Vector(this.position.x + this.width / 2, this.position.y - this.height / 2);
+
+    const start = getCoorditatesAfterRotation({
+      x: originalTopLeft.x,
+      y: originalTopLeft.y,
+      origin: this.position,
+      angle: this.angle - Math.PI / 2,
+    });
+    const end = getCoorditatesAfterRotation({
+      x: originalTopRight.x,
+      y: originalTopRight.y,
+      origin: this.position,
+      angle: this.angle - Math.PI / 2,
+    });
+
+    this.point.setProperty(hmUI.prop.MORE, {
+      x: start.x,
+      y: start.y,
+    });
+
+    this.point2.setProperty(hmUI.prop.MORE, {
+      x: end.x,
+      y: end.y,
+    });
+
+    return { start, end };
   }
 
   addListeners() {
@@ -52,5 +83,21 @@ export default class Platform {
       angle: this.visibleAngle,
       mode: 'center'
     });
+
+    this.point = hmUI.createWidget(hmUI.widget.FILL_RECT, {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 3,
+      color: 0x00FF00
+    })
+
+    this.point2 = hmUI.createWidget(hmUI.widget.FILL_RECT, {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 3,
+      color: 0x0000FF
+    })
   }
 }

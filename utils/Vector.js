@@ -1,5 +1,3 @@
-import { getRandom } from "../helpers";
-
 export default class Vector {
   constructor(x = 0, y = 0) {
     this.x = x;
@@ -14,6 +12,10 @@ export default class Vector {
 
   static fromAngle(angle) {
     return new Vector(Math.cos(angle), Math.sin(angle));
+  }
+
+  static dot(v1, v2) {
+    return v1.x * v2.x + v1.y * v2.y;
   }
 
   set(x, y) {
@@ -61,6 +63,10 @@ export default class Vector {
     if (mag === 0) return new Vector();
 
     return new Vector(x / mag, y / mag);
+  }
+
+  normal() {
+    return new Vector(-this.y, this.x).normalize(); //(0, 1) => (-1, 0)
   }
 
   heading() {
