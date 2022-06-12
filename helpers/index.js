@@ -18,10 +18,10 @@ export function getRandomFromArray(array) {
 }
 
 export function getMinMax(origMin, origMax, min, max, value) {
-  const stepsCount = max - min;
-  const origStep = (origMax - origMin) / stepsCount;
+  const stepsCount = max - min; // 100 - 0 = 100
+  const origStep = (origMax - origMin) / stepsCount; // 45 - (-45) / 100 = 90 / 100 = 0.9
 
-  return origStep * value;
+  return origStep * value + origMin; // 0.9 * 0 + (-45) = -45
 }
 
 export function log(...args) {

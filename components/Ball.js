@@ -1,7 +1,7 @@
 import Vector from "../utils/Vector";
 import Image from "./Image";
 import { SCREEN_CENTER, DEVICE_WIDTH } from "../consts";
-import { log } from "../helpers";
+import { log, getMinMax } from "../helpers";
 
 export default class Ball {
   constructor(game) {
@@ -16,35 +16,10 @@ export default class Ball {
     this.acceleration = new Vector(0, 0);
     this.velocity = new Vector(0, 0);
     this.position = this.positionOnThePlatform;
-
-    this.addListeners();
   }
 
   get positionOnThePlatform() {
     return this.game.platform.position.add(SCREEN_CENTER.sub(this.game.platform.position).setMag(this.game.platform.height / 2 + this.height / 2));
-  }
-
-  addListeners() {
-    hmApp.registerGestureEvent((event) => {
-      switch (event) {
-        case hmApp.gesture.UP:
-          this.acceleration = new Vector(0, -10);
-          break
-        case hmApp.gesture.DOWN:
-          this.acceleration = new Vector(0, 10);
-          break
-        case hmApp.gesture.LEFT:
-          this.acceleration = new Vector(-10, 0);
-          break
-        case hmApp.gesture.RIGHT:
-          this.acceleration = new Vector(10, 0);
-          break
-        default:
-          break
-      }
-
-      return true;
-    });
   }
 
   checkDeviceBorders() {
@@ -85,16 +60,18 @@ export default class Ball {
   checkPlatformCollision() {
     if (!this.isFlying) return;
 
-    const closestPointToThePlatform = this.getClosestPointToThePlatform();
-
+    const projectionPoint = this.getClosestPointToThePlatform();
+    // log(projectionPoint.x, projectionPoint.y);
     this.point.setProperty(hmUI.prop.MORE, {
-      x: closestPointToThePlatform.x,
-      y: closestPointToThePlatform.y,
+      x: projectionPoint.x,
+      y: projectionPoint.y,
     });
 
-    if (closestPointToThePlatform.sub(this.position).mag() <= this.width / 2) {
-      log('COLLISION');
-      this.velocity = this.velocity.mult(-1);
+    if (projectionPoint.sub(this.position).mag() <= this.width / 2) {
+      const projectionLength = this.game.platform.coorditates.start.sub(projectionPoint).mag();
+      const newAngle = getMinMax(0, this.game.platform.width, -Math.PI / 180 * 45, Math.PI / 180 * 45, projectionLength);
+
+      this.velocity = this.velocity.mult(-1).add(Vector.fromAngle(newAngle).setMag(this.maxSpeed)).setMag(this.maxSpeed);
     }
   }
 
