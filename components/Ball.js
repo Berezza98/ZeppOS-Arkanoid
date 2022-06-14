@@ -1,7 +1,7 @@
 import Vector from "../utils/Vector";
 import Image from "./Image";
 import { SCREEN_CENTER, DEVICE_WIDTH } from "../consts";
-import { log, getMinMax } from "../helpers";
+import { log, getMinMax, lineCircleCollision } from "../helpers";
 
 export default class Ball {
   constructor(game) {
@@ -22,6 +22,10 @@ export default class Ball {
     return this.game.platform.position.add(SCREEN_CENTER.sub(this.game.platform.position).setMag(this.game.platform.height / 2 + this.height / 2));
   }
 
+  get radius() {
+    return this.width / 2;
+  }
+
   checkDeviceBorders() {
     const { width } = hmSetting.getDeviceInfo();
 
@@ -32,46 +36,23 @@ export default class Ball {
     }
   }
 
-  getClosestPointToThePlatform() {
-    const platformCoordinates = this.game.platform.coorditates;
-
-    const startPlatformToEndPlatformVector = platformCoordinates.end.sub(platformCoordinates.start);
-    const centerBallToStartPlatformVector = platformCoordinates.start.sub(this.position);
-    const centerBallToEndPlatformVector = platformCoordinates.end.sub(this.position);
-
-    // CHECK IF CLOSEST POINT IS START POINT OF PLATFORM
-    if (Vector.dot(startPlatformToEndPlatformVector, centerBallToStartPlatformVector.normalize()) > 0) {
-      return platformCoordinates.start;
-    }
-
-    // CHECK IF CLOSEST POINT IS END POINT OF PLATFORM
-    if (Vector.dot(startPlatformToEndPlatformVector, centerBallToEndPlatformVector.normalize()) < 0) {
-      return platformCoordinates.end;
-    }
-
-    const startPlatformToCenterBallVector = this.position.sub(platformCoordinates.start);
-
-    const projectionLength = Vector.dot(startPlatformToEndPlatformVector.normalize(), startPlatformToCenterBallVector);
-    const projectionPoint = platformCoordinates.start.add(startPlatformToEndPlatformVector.setMag(projectionLength));
-    
-    return projectionPoint;
+  platformPenetrationResolution(closestPointToThePlatform) {
+    const penetrationVector = this.position.sub(closestPointToThePlatform);
+    this.position = this.position.add(penetrationVector.setMag(this.width / 2 - penetrationVector.mag()));
   }
 
   checkPlatformCollision() {
     if (!this.isFlying) return;
 
-    const projectionPoint = this.getClosestPointToThePlatform();
-    // log(projectionPoint.x, projectionPoint.y);
-    this.point.setProperty(hmUI.prop.MORE, {
-      x: projectionPoint.x,
-      y: projectionPoint.y,
-    });
+    const { result, projectionPoint } = lineCircleCollision(this.game.platform.coorditates, this);
 
-    if (projectionPoint.sub(this.position).mag() <= this.width / 2) {
+    if (result) {
+      this.platformPenetrationResolution(projectionPoint);
+
       const projectionLength = this.game.platform.coorditates.start.sub(projectionPoint).mag();
-      const newAngle = getMinMax(0, this.game.platform.width, -Math.PI / 180 * 45, Math.PI / 180 * 45, projectionLength);
+      const newAngle = getMinMax(0, this.game.platform.width, -10, 10, projectionLength);
 
-      this.velocity = this.velocity.mult(-1).add(Vector.fromAngle(newAngle).setMag(this.maxSpeed)).setMag(this.maxSpeed);
+      this.velocity = Vector.fromAngle(this.velocity.mult(-1).heading() + Math.PI / 180 * newAngle).setMag(this.maxSpeed);
     }
   }
 
@@ -101,11 +82,6 @@ export default class Ball {
         y: this.position.y,
       });
 
-      this.point2.setProperty(hmUI.prop.MORE, {
-        x: this.position.x,
-        y: this.position.y,
-      });
-
       return;
     }
 
@@ -120,22 +96,6 @@ export default class Ball {
       h: this.height,
       src: this.image,
       mode: 'center'
-    });
-
-    this.point = hmUI.createWidget(hmUI.widget.FILL_RECT, {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 3,
-      color: 0xFF0000
-    });
-
-    this.point2 = hmUI.createWidget(hmUI.widget.FILL_RECT, {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 3,
-      color: 0x00FF00
     });
   }
 }

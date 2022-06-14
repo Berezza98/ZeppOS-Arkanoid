@@ -8,7 +8,7 @@ export default class Platform {
     this.widget = null;
     this.width = 100;
     this.height = 20;
-    this.angle = 0;
+    this.angle = Math.PI / 2;
     this.image = 'image/platform.png';
 
     this.addListeners();
@@ -37,16 +37,6 @@ export default class Platform {
       y: originalTopRight.y,
       origin: this.position,
       angle: this.angle - Math.PI / 2,
-    });
-
-    this.point.setProperty(hmUI.prop.MORE, {
-      x: start.x,
-      y: start.y,
-    });
-
-    this.point2.setProperty(hmUI.prop.MORE, {
-      x: end.x,
-      y: end.y,
     });
 
     return { start, end };
@@ -83,21 +73,5 @@ export default class Platform {
       angle: this.visibleAngle,
       mode: 'center'
     });
-
-    this.point = hmUI.createWidget(hmUI.widget.FILL_RECT, {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 3,
-      color: 0x00FF00
-    })
-
-    this.point2 = hmUI.createWidget(hmUI.widget.FILL_RECT, {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 3,
-      color: 0x0000FF
-    })
   }
 }

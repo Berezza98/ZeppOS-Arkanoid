@@ -1,6 +1,7 @@
 import Background from "./Background";
 import Platform from "./Platform";
 import Ball from "./Ball";
+import Brick from "./Brick";
 
 export default class Game {
   constructor() {
@@ -9,6 +10,7 @@ export default class Game {
     this.background = new Background(this);
     this.platform = new Platform(this);
     this.ball = new Ball(this);
+    this.bricks = Brick.generateField(this);
 
     this.addGameObjects();
   }
@@ -23,6 +25,7 @@ export default class Game {
   run() {
     this.timer = timer.createTimer( 0, 1000 / this.fps, () => {
       this.gameObjects.forEach(obj => obj.update());
+      this.bricks.forEach(brick => brick.update());
     });
   }
 

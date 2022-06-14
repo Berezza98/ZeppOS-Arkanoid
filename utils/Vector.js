@@ -18,6 +18,11 @@ export default class Vector {
     return v1.x * v2.x + v1.y * v2.y;
   }
 
+  static angleBetween(v1, v2) {
+    const cosinus = Vector.dot(v1, v2) / (v1.mag() * v2.mag());
+    return Math.acos(cosinus);
+  }
+
   set(x, y) {
     this.x = x;
     this.y = y;
