@@ -62,7 +62,7 @@ export default class Brick {
   }
 
   checkCollisionWithBall() {
-    if (!this.game.ball.isFlying) return;
+    if (!this.game.ball.isFlying || this.game.ball.position.sub(this.position).mag() > this.width + this.game.ball.radius) return;
 
     Object.keys(this.allWalls).forEach((wallName, index) => {
       const { result, projectionPoint } = lineCircleCollision(this.allWalls[wallName], this.game.ball);
@@ -117,9 +117,9 @@ export default class Brick {
   static generateField(game, op) {
     const options = Object.assign({}, {
       center: SCREEN_CENTER,
-      verticalMargins: 10,
-      horizontalMargins: 10,
-      count: 6,
+      verticalMargins: 20,
+      horizontalMargins: 50,
+      count: 20,
       inRow: 4,
     }, op);
 

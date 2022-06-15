@@ -43,21 +43,27 @@ export function lineCircleCollision(line, circle) {
 
   // CHECK IF CLOSEST POINT IS START POINT OF LINE
   if (Vector.dot(startLineToEndLineVector, centerBallToStartLineVector.normalize()) > 0) {
-    return line.start;
+    return {
+      result: line.start.sub(circle.position).mag() < circle.radius,
+      projectionPoint: line.start
+    }
   }
 
   // CHECK IF CLOSEST POINT IS END POINT OF LINE
   if (Vector.dot(startLineToEndLineVector, centerBallToEndLineVector.normalize()) < 0) {
-    return line.end;
+    return {
+      result: line.end.sub(circle.position).mag() < circle.radius,
+      projectionPoint: line.end
+    }
   }
 
-  const startPlatformToCenterBallVector = circle.position.sub(line.start);
+  const startLineToCenterBallVector = circle.position.sub(line.start);
 
-  const projectionLength = Vector.dot(startLineToEndLineVector.normalize(), startPlatformToCenterBallVector);
+  const projectionLength = Vector.dot(startLineToEndLineVector.normalize(), startLineToCenterBallVector);
   const projectionPoint = line.start.add(startLineToEndLineVector.setMag(projectionLength));
-  
+
   return {
-    result: projectionPoint.sub(circle.position).mag() < circle.radius / 2,
+    result: projectionPoint.sub(circle.position).mag() < circle.radius,
     projectionPoint
   }
 }
