@@ -50,7 +50,7 @@ export default class Ball {
       this.platformPenetrationResolution(projectionPoint);
 
       const projectionLength = this.game.platform.coorditates.start.sub(projectionPoint).mag();
-      const newAngle = getMinMax(0, this.game.platform.width, -10, 10, projectionLength);
+      const newAngle = getMinMax(0, this.game.platform.width, -30, 30, projectionLength);
 
       this.velocity = Vector.fromAngle(this.velocity.mult(-1).heading() + Math.PI / 180 * newAngle).setMag(this.maxSpeed);
     }
