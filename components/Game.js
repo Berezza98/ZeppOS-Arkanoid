@@ -1,18 +1,28 @@
 import Background from "./Background";
 import Platform from "./Platform";
 import Ball from "./Ball";
-import Brick from "./Brick";
+import Brick, { BREAK_EVENT } from "./Brick";
 
 export default class Game {
   constructor() {
     this.fps = 30;
     this.timer = null;
-    this.background = new Background(this);
+    // this.background = new Background(this);
     this.platform = new Platform(this);
     this.ball = new Ball(this);
-    this.bricks = Brick.generateField(this);
 
     this.addGameObjects();
+
+    hmApp.registerGestureEvent((event) => {
+      switch (event) {
+        case hmApp.gesture.UP:
+          this.ball.start();
+          break
+        
+      }
+
+      return false
+    })
   }
 
   addGameObjects() {
@@ -20,6 +30,15 @@ export default class Game {
       this.ball,
       this.platform
     ];
+
+    this.bricks = Brick.generateField(this);
+
+    this.bricks.forEach(brick => {
+      brick.on(BREAK_EVENT, () => {
+        this.bricks.splice(this.bricks.indexOf(brick), 1);
+        console.log('DELETE: ', this.bricks.length);
+      });
+    });
   }
 
   run() {

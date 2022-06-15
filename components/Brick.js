@@ -1,11 +1,13 @@
+import Image from "./Image";
 import { SCREEN_CENTER } from "../consts";
 import { lineCircleCollision } from "../helpers";
 import Vector from "../utils/Vector";
+import EveneEmitter from "../utils/EventEmitter";
 
-const HEALTH_COLORS = {
-  1: 0xff0000,
-  2: 0x0000ff,
-  3: 0x00ff00
+const HEALTH_IMAGES = {
+  1: 'image/red-brick.png',
+  2: 'image/yellow-brick.png',
+  3: 'image/green-brick.png'
 };
 
 const SIZES_MAP = {
@@ -18,8 +20,12 @@ const SIZES_MAP = {
 const BRICK_WIDTH = 50;
 const BRICK_HEIGHT = 15;
 
-export default class Brick {
+export const BREAK_EVENT = 'BREAK_EVENT';
+
+export default class Brick extends EveneEmitter {
   constructor(game, x, y) {
+    super();
+
     this.widget = null;
     this.game = game;
     this.position = new Vector(x, y);
@@ -63,6 +69,15 @@ export default class Brick {
 
   hit() {
     this.health -= 1;
+
+    if (!this.isAlive) {
+      
+      this.widget.remove();
+
+      this.emit(BREAK_EVENT);
+    }
+
+    this.widget.setSrc(HEALTH_IMAGES[this.health]);
   }
 
   checkCollisionWithBall() {
@@ -90,18 +105,9 @@ export default class Brick {
   }
 
   update() {
-    if (!this.isAlive) {
-      this.widget.setProperty(hmUI.prop.VISIBLE, false);
-      return;
-    };
-
     this.checkCollisionWithBall();
 
     if (this.widget) {
-      this.widget.setProperty(hmUI.prop.MORE, {
-        color: HEALTH_COLORS[this.health]
-      });
-
       return;
     }
     
@@ -109,12 +115,13 @@ export default class Brick {
   }
 
   draw() {
-    this.widget = hmUI.createWidget(hmUI.widget.FILL_RECT, {
-      x: this.position.x - this.width / 2,
-      y: this.position.y - this.height / 2,
+    this.widget = new Image({
+      x: this.position.x,
+      y: this.position.y,
       w: this.width,
       h: this.height,
-      color: HEALTH_COLORS[this.health]
+      src: HEALTH_IMAGES[this.health],
+      mode: 'center'
     });
   }
 
@@ -123,7 +130,7 @@ export default class Brick {
       center: SCREEN_CENTER,
       verticalMargins: 20,
       horizontalMargins: 50,
-      count: 20,
+      count: 1,
       inRow: 4,
     }, op);
 

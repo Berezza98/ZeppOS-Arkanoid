@@ -1,3 +1,4 @@
+import { log } from "../helpers";
 import Vector from "../utils/Vector";
 
 export default class Image {
@@ -19,7 +20,7 @@ export default class Image {
       ? new Vector(this.options.x - (this.widgetSize / 2), this.options.y - (this.widgetSize / 2))
       : new Vector(this.options.x - ((this.widgetSize - this.options.w) / 2), this.options.y - ((this.widgetSize - this.options.h) / 2));
   
-    this.draw();
+    this.createWidget();
   }
 
   get isCenterMode() {
@@ -37,6 +38,14 @@ export default class Image {
     this.widget.setProperty(propName, updates);
   }
 
+  setSrc(src) {
+    this.remove();
+
+    this.options.src = src;
+
+    this.createWidget();
+  }
+
   transformCenter(value) {
     const copy = Object.assign({}, value);
 
@@ -47,7 +56,7 @@ export default class Image {
     }
   }
 
-  draw() {
+  createWidget() {
     const { src, angle } = this.options;
 
     this.widget = hmUI.createWidget(hmUI.widget.IMG, {
@@ -62,5 +71,10 @@ export default class Image {
       src,
       angle
     });
+  }
+
+  remove() {
+    this.widget.setProperty(hmUI.prop.VISIBLE, false);
+    hmUI.deleteWidget(this.widget);
   }
 }
