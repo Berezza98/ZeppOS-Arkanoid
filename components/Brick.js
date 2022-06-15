@@ -47,9 +47,13 @@ export default class Brick {
       },
     };
   }
-
+  
   get isAlive() {
     return this.health > 0;
+  }
+
+  get diagonal() {
+    return Math.sqrt(Math.pow(this.width) + Math.pow(this.height));
   }
 
   penetrationResolution(closestPointToThePlatform) {
@@ -62,7 +66,7 @@ export default class Brick {
   }
 
   checkCollisionWithBall() {
-    if (!this.game.ball.isFlying || this.game.ball.position.sub(this.position).mag() > this.width + this.game.ball.radius) return;
+    if (!this.game.ball.isFlying || this.game.ball.position.sub(this.position).mag() > this.diagonal / 2 + this.game.ball.radius) return;
 
     Object.keys(this.allWalls).forEach((wallName, index) => {
       const { result, projectionPoint } = lineCircleCollision(this.allWalls[wallName], this.game.ball);
