@@ -53,7 +53,7 @@ export default class Brick {
   }
 
   get diagonal() {
-    return Math.sqrt(Math.pow(this.width) + Math.pow(this.height));
+    return Math.sqrt(Math.pow(this.width, 2) + Math.pow(this.height, 2));
   }
 
   penetrationResolution(closestPointToThePlatform) {
