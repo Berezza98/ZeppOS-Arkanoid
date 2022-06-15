@@ -58,7 +58,7 @@ export default class Brick {
 
   penetrationResolution(closestPointToThePlatform) {
     const penetrationVector = this.game.ball.position.sub(closestPointToThePlatform);
-    this.game.ball.position = this.game.ball.position.add(penetrationVector.setMag(this.game.ball.width / 2 - penetrationVector.mag()));
+    this.game.ball.position = this.game.ball.position.add(penetrationVector.setMag(this.game.ball.radius - penetrationVector.mag()));
   }
 
   hit() {
