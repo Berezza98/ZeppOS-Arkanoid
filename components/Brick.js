@@ -82,7 +82,7 @@ export default class Brick extends EveneEmitter {
       // this.widget.remove();
 
       this.widget.setProperty(hmUI.prop.VISIBLE, false);
-      hmUI.deleteWidget(this.widget);
+      // hmUI.deleteWidget(this.widget);
       this.emit(BREAK_EVENT);
     }
 
