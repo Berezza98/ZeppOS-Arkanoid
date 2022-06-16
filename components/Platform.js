@@ -1,7 +1,7 @@
 import Vector from "../utils/Vector";
 import Image from "./Image";
 import { SCREEN_CENTER, DEVICE_WIDTH } from "../consts";
-import { getCoorditatesAfterRotation } from "../helpers";
+import { getCoorditatesAfterRotation, radiansToDegrees } from "../helpers";
 
 export default class Platform {
   constructor() {
@@ -15,7 +15,7 @@ export default class Platform {
   }
 
   get visibleAngle() {
-    return this.angle / (Math.PI / 180) + 90;
+    return this.angle + Math.PI / 2;
   }
 
   get position() {
@@ -55,7 +55,7 @@ export default class Platform {
       this.widget.setProperty(hmUI.prop.MORE, {
         x: this.position.x,
         y: this.position.y,
-        angle: this.visibleAngle
+        angle: radiansToDegrees(this.visibleAngle)
       });
       return;
     }
@@ -70,7 +70,7 @@ export default class Platform {
       w: this.width,
       h: this.height,
       src: this.image,
-      angle: this.visibleAngle,
+      angle: radiansToDegrees(this.visibleAngle),
       mode: 'center'
     });
   }
