@@ -10,6 +10,12 @@ const HEALTH_IMAGES = {
   3: 'image/green-brick.png'
 };
 
+const HEALTH_COLORS = {
+  1: 0xff0000,
+  2: 0x0000ff,
+  3: 0x00ff00
+};
+
 const SIZES_MAP = {
   TOP: 'TOP',
   LEFT: 'LEFT',
@@ -72,26 +78,45 @@ export default class Brick extends EveneEmitter {
 
     if (!this.isAlive) {
       
-      this.widget.remove();
+      // FOR IMAGES
+      // this.widget.remove();
 
+      this.widget.setProperty(hmUI.prop.VISIBLE, false);
+      hmUI.deleteWidget(this.widget);
       this.emit(BREAK_EVENT);
     }
 
-    this.widget.setSrc(HEALTH_IMAGES[this.health]);
+    this.widget.setProperty(hmUI.prop.MORE, {
+      color: HEALTH_COLORS[this.health]
+    });
+
+    // FOR IMAGES
+    // this.widget.setSrc(HEALTH_IMAGES[this.health]);
   }
 
   checkCollisionWithBall() {
-    if (!this.game.ball.isFlying || this.game.ball.position.sub(this.position).mag() > this.diagonal / 2 + this.game.ball.radius) return;
+    if (!this.game.ball.isFlying || this.game.ball.position.sub(this.position).mag() >= this.diagonal / 2 + this.game.ball.radius) return;
 
-    Object.keys(this.allWalls).forEach((wallName, index) => {
+    const collidedSides = [];
+
+    Object.keys(this.allWalls).forEach((wallName) => {
       const { result, projectionPoint } = lineCircleCollision(this.allWalls[wallName], this.game.ball);
 
-      if (!result) return;
+      if (result) {
+        collidedSides.push({
+          projectionPoint,
+          wallName
+        });
+      }
+    });
 
-      this.penetrationResolution(projectionPoint);
-      this.hit();
+    if (collidedSides.length === 0) return;
 
-      switch (wallName) {
+    this.penetrationResolution(collidedSides[0].projectionPoint);
+    this.hit();
+
+    collidedSides.forEach(side => {
+      switch (side.wallName) {
         case SIZES_MAP.RIGHT:
         case SIZES_MAP.LEFT:
           this.game.ball.velocity.x = -this.game.ball.velocity.x;
@@ -115,13 +140,22 @@ export default class Brick extends EveneEmitter {
   }
 
   draw() {
-    this.widget = new Image({
-      x: this.position.x,
-      y: this.position.y,
+    // FOR IMAGES
+    // this.widget = new Image({
+    //   x: this.position.x,
+    //   y: this.position.y,
+    //   w: this.width,
+    //   h: this.height,
+    //   src: HEALTH_IMAGES[this.health],
+    //   mode: 'center'
+    // });
+
+    this.widget = hmUI.createWidget(hmUI.widget.FILL_RECT, {
+      x: this.position.x - this.width / 2,
+      y: this.position.y - this.height / 2,
       w: this.width,
       h: this.height,
-      src: HEALTH_IMAGES[this.health],
-      mode: 'center'
+      color: HEALTH_COLORS[this.health]
     });
   }
 
@@ -130,7 +164,7 @@ export default class Brick extends EveneEmitter {
       center: SCREEN_CENTER,
       verticalMargins: 20,
       horizontalMargins: 50,
-      count: 1,
+      count: 20,
       inRow: 4,
     }, op);
 

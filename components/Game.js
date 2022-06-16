@@ -7,7 +7,7 @@ export default class Game {
   constructor() {
     this.fps = 30;
     this.timer = null;
-    // this.background = new Background(this);
+    this.background = new Background(this);
     this.platform = new Platform(this);
     this.ball = new Ball(this);
 
@@ -36,7 +36,6 @@ export default class Game {
     this.bricks.forEach(brick => {
       brick.on(BREAK_EVENT, () => {
         this.bricks.splice(this.bricks.indexOf(brick), 1);
-        console.log('DELETE: ', this.bricks.length);
       });
     });
   }
