@@ -46,18 +46,21 @@ export default class Ball {
 
     const { result, projectionPoint } = lineCircleCollision(this.game.platform.coorditates, this);
 
-    if (result) {
-      this.platformPenetrationResolution(projectionPoint);
+    const fromCenterToBall = this.position.sub(SCREEN_CENTER).mag();
+    const fromCenterToPenetrationPoint = projectionPoint.sub(SCREEN_CENTER).mag();
 
-      // WE NEED TO FIND ANGLE BETWEEN PLATFORM AND BALL VELOCITY VECTOR
-      const v1 = this.velocity.mult(-1);
-      const v2 = this.game.platform.coorditates.start.sub(projectionPoint);
+    if (!result || (result && fromCenterToBall > fromCenterToPenetrationPoint)) return;
 
-      const platformAngle = this.game.platform.coorditates.end.sub(this.game.platform.coorditates.start).heading();
-      const angle = Vector.angleBetween(v1, v2);
-      const newAngle = platformAngle - angle;
-      this.velocity = Vector.fromAngle(newAngle).setMag(this.maxSpeed);
-    }
+    this.platformPenetrationResolution(projectionPoint);
+
+    // WE NEED TO FIND ANGLE BETWEEN PLATFORM AND BALL VELOCITY VECTOR
+    const v1 = this.velocity.mult(-1);
+    const v2 = this.game.platform.coorditates.start.sub(projectionPoint);
+
+    const platformAngle = this.game.platform.coorditates.end.sub(this.game.platform.coorditates.start).heading();
+    const angle = Vector.angleBetween(v1, v2);
+    const newAngle = platformAngle - angle;
+    this.velocity = Vector.fromAngle(newAngle).setMag(this.maxSpeed);
   }
 
   start() {
