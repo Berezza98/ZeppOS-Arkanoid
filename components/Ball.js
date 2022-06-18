@@ -11,7 +11,7 @@ export default class Ball {
     this.image = 'image/game-ball.png';
     this.width = 32;
     this.height = 32;
-    this.maxSpeed = 4;
+    this.maxSpeed = 6;
 
     this.acceleration = new Vector(0, 0);
     this.velocity = new Vector(0, 0);
