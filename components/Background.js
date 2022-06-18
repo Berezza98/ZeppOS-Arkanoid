@@ -1,7 +1,7 @@
 export default class Background {
   constructor(game) {
     this.game = game;
-    this.image = 'image/new-space.png';
+    this.image = 'image/background.png';
 
     this.draw();
     this.addListeners();
