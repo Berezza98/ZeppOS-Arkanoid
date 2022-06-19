@@ -1,18 +1,14 @@
 import { DEVICE_HEIGHT, DEVICE_WIDTH } from "../consts";
 
 export default class Background {
-  constructor(game) {
-    this.game = game;
-    this.image = 'image/background.png';
+  constructor(image) {
+    this.image = image;
 
     this.draw();
-    this.addListeners();
   }
 
-  addListeners() {
-    this.widget.addEventListener(hmUI.event.CLICK_UP, (info) => {
-      this.game.ball.start();
-    });    
+  onClick(handler) {
+    this.widget.addEventListener(hmUI.event.CLICK_UP, handler);    
   }
 
   draw() {

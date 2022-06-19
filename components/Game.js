@@ -7,12 +7,15 @@ export default class Game {
   constructor() {
     this.fps = 30;
     this.timer = null;
-    this.background = new Background(this);
+    this.background = new Background('image/background.png');
     this.platform = new Platform(this);
     this.ball = new Ball(this);
 
     this.addGameObjects();
+    this.addListeners();
+  }
 
+  addListeners() {
     hmApp.registerGestureEvent((event) => {
       switch (event) {
         case hmApp.gesture.UP:
@@ -22,7 +25,11 @@ export default class Game {
       }
 
       return false
-    })
+    });
+
+    this.background.onClick(() => {
+      this.game.ball.start();
+    });
   }
 
   addGameObjects() {

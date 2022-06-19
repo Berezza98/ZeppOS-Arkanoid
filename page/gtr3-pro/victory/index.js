@@ -13,12 +13,10 @@ Page({
     });
   },
   onInit() {
-    logger.debug('Game page onInit invoked')
+
   },
 
   onDestroy() {
     game.stop();
-
-    logger.debug('Game page onDestroy invoked')
   },
 });

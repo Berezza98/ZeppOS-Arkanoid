@@ -1,6 +1,6 @@
 import { DEVICE_HEIGHT, DEVICE_WIDTH } from "../consts";
 import Vector from "../utils/Vector";
-const logger = DeviceRuntimeCore.HmLogger.getLogger('Star Wars');
+const logger = DeviceRuntimeCore.HmLogger.getLogger('Space Breaker');
 
 export function getRandom(min, max) {
   min = Math.ceil(min);

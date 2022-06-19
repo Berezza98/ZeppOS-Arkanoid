@@ -1,35 +1,37 @@
-import { DEVICE_HEIGHT } from "../../../consts";
+import Background from "../../../components/Background";
+import Button from "../../../components/Button";
+import ImageText from "../../../components/ImageText";
+import { DEVICE_HEIGHT, DEVICE_WIDTH } from "../../../consts";
 
 Page({
   build() {
-    function play() {
-      hmApp.gotoPage({
-        url: 'page/gtr3-pro/game/index',
-        param: JSON.stringify({
-          id: '0',
-          type: 'normal'
-        })
-      });
-    }
+    const bg = new Background('image/startscreen.png');
+    const levelText = new ImageText('levelNumbers', {
+      x: DEVICE_WIDTH / 2,
+      y: DEVICE_HEIGHT / 2 - 8,
+      w: 100,
+      h: 50
+    });
 
-    const button = hmUI.createWidget(hmUI.widget.BUTTON, {
-      x: 100,
-      y: DEVICE_HEIGHT - 200,
-      w: 300,
-      h: 100,
-      text: 'Play',
-      color: 0x00ffff,
-      text_size: 30,
-      normal_color: 0x262626,
-      press_color: 0x292929,
-      click_func: play
+    levelText.text = '1';
+
+    const playBtn = new Button({
+      x: DEVICE_WIDTH / 2,
+      y: DEVICE_HEIGHT - 100,
+      w: 200,
+      h: 50,
+      normal_src: 'image/play-button.png',
+      press_src: 'image/play-button.png',
+      click_func: () => {
+        hmApp.gotoPage({ url: 'page/gtr3-pro/game/index' });
+      }
     });
   },
   onInit() {
-    logger.debug('page onInit invoked')
+
   },
 
   onDestroy() {
-    logger.debug('page onDestroy invoked')
+
   },
 });

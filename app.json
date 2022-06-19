@@ -2,7 +2,7 @@
   "configVersion": "v2",
   "app": {
     "appId": 24868,
-    "appName": "Star Wars",
+    "appName": "Space Breaker",
     "appType": "app",
     "version": {
       "code": 1,
@@ -10,7 +10,7 @@
     },
     "icon": "new-icon.png",
     "vender": "zepp",
-    "description": "Star Wars Game"
+    "description": "Space Breaker Game"
   },
   "permissions": [],
   "runtime": {
@@ -34,7 +34,7 @@
           "window": {
             "navigationBarBackgroundColor": "#ffffff",
             "navigationBarTextStyle": "black",
-            "navigationBarTitleText": "Star Wars",
+            "navigationBarTitleText": "Space Breaker",
             "backgroundColor": "#eeeeee",
             "backgroundTextStyle": "light"
           }
@@ -61,7 +61,7 @@
   },
   "i18n": {
     "en-US": {
-      "appName": "Star Wars"
+      "appName": "Space Breaker"
     }
   },
   "defaultLanguage": "en-US"
