@@ -1,6 +1,5 @@
+import { DEVICE_HEIGHT, DEVICE_WIDTH } from "../consts";
 import Vector from "../utils/Vector";
-
-const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = hmSetting.getDeviceInfo();
 const logger = DeviceRuntimeCore.HmLogger.getLogger('Star Wars');
 
 export function getRandom(min, max) {

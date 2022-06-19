@@ -36,7 +36,33 @@ export default class Game {
     this.bricks.forEach(brick => {
       brick.on(BREAK_EVENT, () => {
         this.bricks.splice(this.bricks.indexOf(brick), 1);
+
+        if (this.bricks.length === 0) {
+          this.win();
+        }
       });
+    });
+  }
+
+  win() {
+    this.stop();
+    hmApp.gotoPage({
+      url: 'page/gtr3-pro/victory/index',
+      param: JSON.stringify({
+        id: '0',
+        type: 'normal'
+      })
+    });
+  }
+
+  lose() {
+    this.stop();
+    hmApp.gotoPage({
+      url: 'page/gtr3-pro/loose/index',
+      param: JSON.stringify({
+        id: '0',
+        type: 'normal'
+      })
     });
   }
 

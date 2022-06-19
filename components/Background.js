@@ -1,3 +1,5 @@
+import { DEVICE_HEIGHT, DEVICE_WIDTH } from "../consts";
+
 export default class Background {
   constructor(game) {
     this.game = game;
@@ -14,8 +16,6 @@ export default class Background {
   }
 
   draw() {
-    const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = hmSetting.getDeviceInfo();
-
     this.widget = hmUI.createWidget(hmUI.widget.IMG, {
       x: 0,
       y: 0,

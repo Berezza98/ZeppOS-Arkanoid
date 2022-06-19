@@ -26,7 +26,10 @@
       "module": {
         "page": {
           "pages": [
-            "page/gtr3-pro/home/index.page"
+            "page/gtr3-pro/home/index",
+            "page/gtr3-pro/game/index",
+            "page/gtr3-pro/victory/index",
+            "page/gtr3-pro/loose/index"
           ],
           "window": {
             "navigationBarBackgroundColor": "#ffffff",
