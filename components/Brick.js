@@ -94,6 +94,23 @@ export default class Brick extends EveneEmitter {
     // this.widget.setSrc(HEALTH_IMAGES[this.health]);
   }
 
+  canUseCollision(wallName) {
+    const { x, y } = this.game.ball.velocity;
+
+    switch (wallName) {
+      case SIZES_MAP.RIGHT:
+        return (x < 0 && y > 0) || (x < 0 && y < 0) || (x < 0 && y === 0);
+      case SIZES_MAP.LEFT:
+        return (x > 0 && y > 0) || (x > 0 && y < 0) || (x > 0 && y === 0);
+      case SIZES_MAP.TOP:
+        return (x > 0 && y > 0) || (x < 0 && y > 0) || (x === 0 && y > 0);
+      case SIZES_MAP.BOTTOM:
+        return (x > 0 && y < 0) || (x < 0 && y < 0) || (x === 0 && y < 0);
+      default:
+        return false;
+    }
+  }
+
   checkCollisionWithBall() {
     if (!this.game.ball.isFlying || this.game.ball.position.sub(this.position).mag() >= this.diagonal / 2 + this.game.ball.radius) return;
 
@@ -102,7 +119,7 @@ export default class Brick extends EveneEmitter {
     Object.keys(this.allWalls).forEach((wallName) => {
       const { result, projectionPoint } = lineCircleCollision(this.allWalls[wallName], this.game.ball);
 
-      if (result) {
+      if (result && this.canUseCollision(wallName)) {
         collidedSides.push({
           projectionPoint,
           wallName
