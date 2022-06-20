@@ -6,8 +6,8 @@ import { getCoorditatesAfterRotation, radiansToDegrees } from "../helpers";
 export default class Platform {
   constructor() {
     this.widget = null;
-    this.width = 100;
-    this.height = 20;
+    this.width = 70;
+    this.height = 12;
     this.angle = Math.PI / 2;
     this.image = 'image/platform.png';
 

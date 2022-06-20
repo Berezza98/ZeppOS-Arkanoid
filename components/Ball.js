@@ -14,8 +14,8 @@ export default class Ball extends EveneEmitter {
     this.isFlying = false;
     this.widget = null;
     this.image = 'image/game-ball.png';
-    this.width = 32;
-    this.height = 32;
+    this.width = 20;
+    this.height = 20;
     this.maxSpeed = 6;
     this.lives = 1;
 

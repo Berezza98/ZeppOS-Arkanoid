@@ -23,8 +23,8 @@ const SIZES_MAP = {
   BOTTOM: 'BOTTOM',
 };
 
-const BRICK_WIDTH = 50;
-const BRICK_HEIGHT = 15;
+const BRICK_WIDTH = 34;
+const BRICK_HEIGHT = 12;
 
 export const BREAK_EVENT = 'BREAK_EVENT';
 
@@ -179,10 +179,10 @@ export default class Brick extends EveneEmitter {
   static generateField(game, op) {
     const options = Object.assign({}, {
       center: SCREEN_CENTER,
-      verticalMargins: 20,
-      horizontalMargins: 50,
-      count: 20,
-      inRow: 4,
+      verticalMargins: 15,
+      horizontalMargins: 15,
+      count: 30,
+      inRow: 6,
     }, op);
 
     const rowCount = Math.ceil(options.count / options.inRow);
