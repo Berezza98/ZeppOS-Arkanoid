@@ -1,10 +1,15 @@
+import EveneEmitter from "../utils/EventEmitter";
 import Vector from "../utils/Vector";
 import Image from "./Image";
-import { SCREEN_CENTER, DEVICE_WIDTH } from "../consts";
-import { log, getMinMax, lineCircleCollision, radiansToDegrees } from "../helpers";
+import { SCREEN_CENTER } from "../consts";
+import { lineCircleCollision } from "../helpers";
 
-export default class Ball {
+export const DIED_EVENT = 'DIED_EVENT';
+
+export default class Ball extends EveneEmitter {
   constructor(game) {
+    super();
+
     this.game = game;
     this.isFlying = false;
     this.widget = null;
@@ -12,6 +17,7 @@ export default class Ball {
     this.width = 32;
     this.height = 32;
     this.maxSpeed = 6;
+    this.lives = 1;
 
     this.acceleration = new Vector(0, 0);
     this.velocity = new Vector(0, 0);
@@ -26,14 +32,21 @@ export default class Ball {
     return this.width / 2;
   }
 
+  get isDied() {
+    return this.lives <= 0;
+  }
+
   checkDeviceBorders() {
     const { width } = hmSetting.getDeviceInfo();
 
-    if (this.position.sub(SCREEN_CENTER).mag() > width / 2 + this.width / 2) {
-      this.isFlying = false;
-      this.velocity.set(0, 0);
-      this.position = this.positionOnThePlatform;
-    }
+    if (this.position.sub(SCREEN_CENTER).mag() <= width / 2 + this.width / 2) return;
+
+    this.isFlying = false;
+    this.velocity.set(0, 0);
+    this.position = this.positionOnThePlatform;
+    this.lives -= 1;
+
+    if (this.isDied) this.emit(DIED_EVENT);
   }
 
   platformPenetrationResolution(closestPointToThePlatform) {

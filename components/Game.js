@@ -1,7 +1,8 @@
 import Background from "./Background";
 import Platform from "./Platform";
-import Ball from "./Ball";
+import Ball, { DIED_EVENT } from "./Ball";
 import Brick, { BREAK_EVENT } from "./Brick";
+import { log } from "../helpers";
 
 export default class Game {
   constructor() {
@@ -21,14 +22,17 @@ export default class Game {
         case hmApp.gesture.UP:
           this.ball.start();
           break
-        
       }
 
       return false
     });
 
     this.background.onClick(() => {
-      this.game.ball.start();
+      this.ball.start();
+    });
+
+    this.ball.on(DIED_EVENT, () => {
+      this.lose();
     });
   }
 
@@ -53,24 +57,12 @@ export default class Game {
 
   win() {
     this.stop();
-    hmApp.gotoPage({
-      url: 'page/gtr3-pro/victory/index',
-      param: JSON.stringify({
-        id: '0',
-        type: 'normal'
-      })
-    });
+    hmApp.gotoPage({ url: 'page/gtr3-pro/victory/index' });
   }
 
   lose() {
     this.stop();
-    hmApp.gotoPage({
-      url: 'page/gtr3-pro/loose/index',
-      param: JSON.stringify({
-        id: '0',
-        type: 'normal'
-      })
-    });
+    hmApp.gotoPage({ url: 'page/gtr3-pro/loose/index' });
   }
 
   run() {

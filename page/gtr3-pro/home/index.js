@@ -21,7 +21,7 @@ Page({
       w: 200,
       h: 50,
       normal_src: 'image/play-button.png',
-      press_src: 'image/play-button.png',
+      press_src: 'image/play-button-pressed.png',
       click_func: () => {
         hmApp.gotoPage({ url: 'page/gtr3-pro/game/index' });
       }
