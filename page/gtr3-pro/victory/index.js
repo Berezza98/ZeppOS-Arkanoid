@@ -1,15 +1,21 @@
+import Background from "../../../components/Background";
+import Button from "../../../components/Button";
+import { DEVICE_HEIGHT, DEVICE_WIDTH } from "../../../consts";
+
 Page({
   build() {
-    const text = hmUI.createWidget(hmUI.widget.TEXT, {
-      text: 'VICTORY',
-      x: 42,
-      y: 200,
-      w: DEVICE_WIDTH,
-      h: 100,
-      color: 0xffffff,
-      text_size: 36,
-      align_h: hmUI.align.CENTER_H,
-      text_style: hmUI.text_style.WRAP,
+    const bg = new Background('image/victory-background.png');
+
+    const nextBtn = new Button({
+      x: DEVICE_WIDTH / 2,
+      y: DEVICE_HEIGHT - 100,
+      w: 200,
+      h: 50,
+      normal_src: 'image/next-button.png',
+      press_src: 'image/next-button-pressed.png',
+      click_func: () => {
+        hmApp.gotoPage({ url: 'page/gtr3-pro/game/index' });
+      }
     });
   },
   onInit() {
@@ -17,6 +23,6 @@ Page({
   },
 
   onDestroy() {
-    game.stop();
+
   },
 });
