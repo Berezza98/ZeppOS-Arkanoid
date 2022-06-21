@@ -3,9 +3,11 @@ import Platform from "./Platform";
 import Ball, { DIED_EVENT } from "./Ball";
 import Brick, { BREAK_EVENT } from "./Brick";
 import levelGeneration from "../levels";
+import { isLevelExist } from "../helpers/levels";
 
 export default class Game {
-  constructor() {
+  constructor(level) {
+    this.level = level;
     this.fps = 30;
     this.timer = null;
     this.background = new Background('levels/1.png');
@@ -42,7 +44,7 @@ export default class Game {
       this.platform
     ];
 
-    this.bricks = levelGeneration(this, 1);
+    this.bricks = levelGeneration(this, this.level);
 
     this.bricks.forEach(brick => {
       brick.on(BREAK_EVENT, () => {
@@ -57,6 +59,13 @@ export default class Game {
 
   win() {
     this.stop();
+    this.level += 1;
+
+    getApp()._options.globalData.currentLevel = this.level;
+    getApp()._options.globalData.localStorage.set({
+      currentLevel: this.level
+    });
+
     hmApp.gotoPage({ url: 'page/gtr3-pro/victory/index' });
   }
 
@@ -66,6 +75,11 @@ export default class Game {
   }
 
   run() {
+    // Check if level is not exist
+    if (isLevelExist(this.level)) {
+      hmApp.gotoPage({ url: 'page/gtr3-pro/home/index' });
+    }
+
     this.timer = timer.createTimer( 0, 1000 / this.fps, () => {
       this.gameObjects.forEach(obj => obj.update());
       this.bricks.forEach(brick => brick.update());

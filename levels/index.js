@@ -3,7 +3,7 @@ import level2 from './2.js';
 import level3 from './3.js';
 import level4 from './4.js';
 
-const levels = {
+export const levels = {
   1: level1,
   2: level2,
   3: level3,

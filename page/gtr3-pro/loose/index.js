@@ -13,7 +13,7 @@ Page({
       h: 50
     });
 
-    levelText.text = '1';
+    levelText.text = getApp()._options.globalData.currentLevel.toString();
 
     const playBtn = new Button({
       x: DEVICE_WIDTH / 2,
