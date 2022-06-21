@@ -76,7 +76,7 @@ export default class Game {
 
   run() {
     // Check if level is not exist
-    if (isLevelExist(this.level)) {
+    if (!isLevelExist(this.level)) {
       hmApp.gotoPage({ url: 'page/gtr3-pro/home/index' });
     }
 
