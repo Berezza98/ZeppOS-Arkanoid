@@ -10,7 +10,7 @@ export default class Game {
     this.level = level;
     this.fps = 30;
     this.timer = null;
-    this.background = new Background(`levels/${this.level}.png`);
+    this.background = new Background(`levels-backgrounds/${this.level}.png`);
     this.platform = new Platform(this);
     this.ball = new Ball(this);
 
