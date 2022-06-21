@@ -27,10 +27,10 @@ export function log(...args) {
   logger.debug(...args);
 }
 
-export function getCoorditatesAfterRotation({ x, y, angle, origin }) {
+export function getCoorditatesAfterRotation({ position, angle, origin }) {
   return new Vector(
-    (x - origin.x) * Math.cos(angle) - (y - origin.y) * Math.sin(angle) + origin.x,
-    (x - origin.x) * Math.sin(angle) + (y - origin.y) * Math.cos(angle) + origin.y
+    (position.x - origin.x) * Math.cos(angle) - (position.y - origin.y) * Math.sin(angle) + origin.x,
+    (position.x - origin.x) * Math.sin(angle) + (position.y - origin.y) * Math.cos(angle) + origin.y
   );
 }
 

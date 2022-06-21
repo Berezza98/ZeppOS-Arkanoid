@@ -2,13 +2,13 @@ import Background from "./Background";
 import Platform from "./Platform";
 import Ball, { DIED_EVENT } from "./Ball";
 import Brick, { BREAK_EVENT } from "./Brick";
-import { log } from "../helpers";
+import levelGeneration from "../levels";
 
 export default class Game {
   constructor() {
     this.fps = 30;
     this.timer = null;
-    this.background = new Background('image/background.png');
+    this.background = new Background('levels/1.png');
     this.platform = new Platform(this);
     this.ball = new Ball(this);
 
@@ -42,7 +42,7 @@ export default class Game {
       this.platform
     ];
 
-    this.bricks = Brick.generateField(this);
+    this.bricks = levelGeneration(this, 1);
 
     this.bricks.forEach(brick => {
       brick.on(BREAK_EVENT, () => {

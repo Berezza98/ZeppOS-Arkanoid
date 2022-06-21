@@ -27,14 +27,12 @@ export default class Platform {
     const originalTopRight = new Vector(this.position.x + this.width / 2, this.position.y - this.height / 2);
 
     const start = getCoorditatesAfterRotation({
-      x: originalTopLeft.x,
-      y: originalTopLeft.y,
+      position: originalTopLeft,
       origin: this.position,
       angle: this.angle - Math.PI / 2,
     });
     const end = getCoorditatesAfterRotation({
-      x: originalTopRight.x,
-      y: originalTopRight.y,
+      position: originalTopRight,
       origin: this.position,
       angle: this.angle - Math.PI / 2,
     });
