@@ -6,6 +6,18 @@ import { lineCircleCollision } from "../helpers";
 
 export const DIED_EVENT = 'DIED_EVENT';
 
+const BALL_IMAGES = {
+  1: 'cyan-ball',
+  2: 'orange-ball',
+  3: 'orange-ball',
+  4: 'cyan-ball',
+  5: 'cyan-ball',
+  6: 'green-ball',
+  7: 'orange-ball',
+  8: 'cyan-ball',
+  9: 'cyan-ball'
+};
+
 export default class Ball extends EveneEmitter {
   constructor(game) {
     super();
@@ -13,7 +25,7 @@ export default class Ball extends EveneEmitter {
     this.game = game;
     this.isFlying = false;
     this.widget = null;
-    this.image = 'image/game-ball.png';
+    this.image = `level-balls/${BALL_IMAGES[this.game.level]}.png`;
     this.width = 20;
     this.height = 20;
     this.maxSpeed = 6;
