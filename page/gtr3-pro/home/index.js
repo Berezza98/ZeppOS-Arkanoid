@@ -9,7 +9,7 @@ Page({
     const currentLevel = getApp()._options.globalData.currentLevel;
 
     const bg = new Background('image/startscreen.png');
-    const levelText = new ImageText('levelNumbers', {
+    const levelText = new ImageText('level-numbers', {
       x: DEVICE_WIDTH / 2,
       y: DEVICE_HEIGHT / 2 - 8,
       w: 100,
