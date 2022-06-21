@@ -11,6 +11,10 @@ export default class Background {
     this.widget.addEventListener(hmUI.event.CLICK_UP, handler);    
   }
 
+  remove() {
+    hmUI.deleteWidget(this.widget);
+  }
+
   draw() {
     this.widget = hmUI.createWidget(hmUI.widget.IMG, {
       x: 0,
