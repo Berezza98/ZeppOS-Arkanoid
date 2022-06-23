@@ -4,6 +4,8 @@ import { getCoorditatesAfterRotation, lineCircleCollision } from "../helpers";
 import Vector from "../utils/Vector";
 import EveneEmitter from "../utils/EventEmitter";
 
+const DEATHLESS_COLOR = 'DEATHLESS_COLOR';
+
 const HEALTH_IMAGES = {
   1: 'image/red-brick.png',
   2: 'image/yellow-brick.png',
@@ -13,7 +15,8 @@ const HEALTH_IMAGES = {
 const HEALTH_COLORS = {
   1: 0xff0000,
   2: 0x0000ff,
-  3: 0x00ff00
+  3: 0x00ff00,
+  [DEATHLESS_COLOR]: 0xaaa9ad
 };
 
 const SIZES_MAP = {
@@ -29,8 +32,15 @@ const BRICK_HEIGHT = 12;
 export const BREAK_EVENT = 'BREAK_EVENT';
 
 export default class Brick extends EveneEmitter {
-  constructor(game, x, y) {
+  constructor(game, x, y, options) {
     super();
+
+    const defaultOptions = {
+      health: 3,
+      deathless: false
+    };
+
+    this.options = Object.assign({}, defaultOptions, options);
 
     this.widget = null;
     this.game = game;
@@ -39,7 +49,8 @@ export default class Brick extends EveneEmitter {
     this.width = BRICK_WIDTH;
     this.height = BRICK_HEIGHT;
     this.angle = 0;
-    this.health = 3;
+    this.deathless = this.options.deathless;
+    this.health = this.options.health;
   }
 
   get dynamic() {
@@ -61,6 +72,8 @@ export default class Brick extends EveneEmitter {
   }
   
   get isAlive() {
+    if (this.deathless) return true;
+
     return this.health > 0;
   }
 
@@ -108,7 +121,7 @@ export default class Brick extends EveneEmitter {
     }
 
     this.widget.setProperty(hmUI.prop.MORE, {
-      color: HEALTH_COLORS[this.health]
+      color: HEALTH_COLORS[this.deathless ? DEATHLESS_COLOR : this.health]
     });
 
     // FOR IMAGES
@@ -212,7 +225,7 @@ export default class Brick extends EveneEmitter {
       y: this.position.y - this.height / 2,
       w: this.width,
       h: this.height,
-      color: HEALTH_COLORS[this.health]
+      color: HEALTH_COLORS[this.deathless ? DEATHLESS_COLOR : this.health]
     });
   }
 
@@ -225,6 +238,10 @@ export default class Brick extends EveneEmitter {
       inRow: 6,
       dynamic: {
         enabled: false
+      },
+      brickOptions: {
+        health: 3,
+        deathless: false
       }
     }, op);
 
@@ -241,7 +258,7 @@ export default class Brick extends EveneEmitter {
 
       const positionX = initialPosition.x + (column * (BRICK_WIDTH + options.horizontalMargins));
       const positionY = initialPosition.y + (row * (BRICK_HEIGHT + options.verticalMargins));
-      const brick = new Brick(game, positionX, positionY);
+      const brick = new Brick(game, positionX, positionY, options.brickOptions);
 
       if (options?.dynamic?.enabled) {
         brick.dynamic = true;
