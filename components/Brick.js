@@ -13,9 +13,9 @@ const HEALTH_IMAGES = {
 };
 
 const HEALTH_COLORS = {
-  1: 0xff0000,
-  2: 0x0000ff,
-  3: 0x00ff00,
+  1: 0xd6332a,
+  2: 0xd6912a,
+  3: 0x37b726,
   [DEATHLESS_COLOR]: 0xaaa9ad
 };
 
