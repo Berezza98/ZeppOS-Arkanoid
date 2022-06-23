@@ -2,16 +2,25 @@ import Vector from "../utils/Vector";
 import Image from "./Image";
 import { SCREEN_CENTER, DEVICE_WIDTH } from "../consts";
 import { getCoorditatesAfterRotation, radiansToDegrees } from "../helpers";
+import EveneEmitter from "../utils/EventEmitter";
 
-export default class Platform {
+export const DIED_EVENT = 'DIED_EVENT';
+
+export default class Platform extends EveneEmitter {
   constructor() {
+    super();
+
     this.widget = null;
     this.width = 70;
     this.height = 12;
     this.angle = Math.PI / 2;
-    this.image = 'image/platform.png';
+    this.lives = 3;
 
     this.addListeners();
+  }
+
+  get image() {
+    return `platform/${this.lives}.png`;
   }
 
   get visibleAngle() {
@@ -20,6 +29,10 @@ export default class Platform {
 
   get position() {
     return Vector.fromAngle(this.angle).mult(DEVICE_WIDTH / 2 - this.height).add(SCREEN_CENTER);
+  }
+
+  get isDied() {
+    return this.lives <= 0;
   }
 
   get coorditates() {
@@ -46,6 +59,15 @@ export default class Platform {
 
       return true;
     });
+  }
+
+  die() {
+    this.lives -= 1;
+
+    if (this.isDied) return this.emit(DIED_EVENT);
+
+    this.widget.remove();
+    this.draw();
   }
 
   update() {

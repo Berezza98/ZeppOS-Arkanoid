@@ -1,6 +1,6 @@
 import Background from "./Background";
-import Platform from "./Platform";
-import Ball, { DIED_EVENT } from "./Ball";
+import Platform, { DIED_EVENT } from "./Platform";
+import Ball from "./Ball";
 import Brick, { BREAK_EVENT } from "./Brick";
 import levelGeneration from "../levels";
 import { isLevelExist } from "../helpers/levels";
@@ -37,7 +37,7 @@ export default class Game {
       this.ball.start();
     });
 
-    this.ball.on(DIED_EVENT, () => {
+    this.platform.on(DIED_EVENT, () => {
       this.lose();
     });
   }

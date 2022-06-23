@@ -16,11 +16,12 @@ export function getRandomFromArray(array) {
   return array[getRandom(0, array.length - 1)];
 }
 
-export function getMinMax(min, max, origMin, origMax, value) {
-  const stepsCount = max - min; // 100 - 0 = 100
-  const origStep = (origMax - origMin) / stepsCount; // 45 - (-45) / 100 = 90 / 100 = 0.9
+export function getMinMax(min, max, origMin, origMax, value) { // -1 1 -100 100, -1
+  const origDist = Math.abs(origMax - origMin); // 100 - (-100) = 200
+  const dist = Math.abs(max - min); // 1 - (-1) = 2
+  const coef = origDist / dist; // 200 / 2 = 100
 
-  return origStep * value + origMin; // 0.9 * 0 + (-45) = -45
+  return origMin + (coef + value * coef); // -100 + (100 + (-100))
 }
 
 export function log(...args) {
