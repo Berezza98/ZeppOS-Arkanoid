@@ -18,6 +18,10 @@ export default class Game {
     this.addListeners();
   }
 
+  get bricksToDestroy() {
+    return this.bricks.filter(brick => !brick.deathless);
+  }
+
   addListeners() {
     hmApp.registerGestureEvent((event) => {
       switch (event) {
@@ -50,7 +54,7 @@ export default class Game {
       brick.on(BREAK_EVENT, () => {
         this.bricks.splice(this.bricks.indexOf(brick), 1);
 
-        if (this.bricks.length === 0) {
+        if (this.bricksToDestroy.length === 0) {
           this.win();
         }
       });
