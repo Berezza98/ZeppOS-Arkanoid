@@ -2,11 +2,11 @@ import Vector from "../utils/Vector";
 import Image from "./Image";
 import { SCREEN_CENTER, DEVICE_WIDTH } from "../consts";
 import { getCoorditatesAfterRotation, radiansToDegrees } from "../helpers";
-import EveneEmitter from "../utils/EventEmitter";
+import EventEmitter from "../utils/EventEmitter";
 
 export const DIED_EVENT = 'DIED_EVENT';
 
-export default class Platform extends EveneEmitter {
+export default class Platform extends EventEmitter {
   constructor() {
     super();
 

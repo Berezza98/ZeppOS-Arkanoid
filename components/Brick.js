@@ -2,7 +2,7 @@ import Image from "./Image";
 import { SCREEN_CENTER } from "../consts";
 import { getCoorditatesAfterRotation, getMinMax, lineCircleCollision } from "../helpers";
 import Vector from "../utils/Vector";
-import EveneEmitter from "../utils/EventEmitter";
+import EventEmitter from "../utils/EventEmitter";
 
 const DEATHLESS_COLOR = 'DEATHLESS_COLOR';
 
@@ -31,7 +31,7 @@ const BRICK_HEIGHT = 12;
 
 export const BREAK_EVENT = 'BREAK_EVENT';
 
-export default class Brick extends EveneEmitter {
+export default class Brick extends EventEmitter {
   constructor(game, x, y, options) {
     super();
 
@@ -121,6 +121,10 @@ export default class Brick extends EveneEmitter {
     }
 
     this.widget.setProperty(hmUI.prop.MORE, {
+      x: this.position.x - this.width / 2,
+      y: this.position.y - this.height / 2,
+      w: this.width,
+      h: this.height,
       color: HEALTH_COLORS[this.deathless ? DEATHLESS_COLOR : this.health]
     });
 
